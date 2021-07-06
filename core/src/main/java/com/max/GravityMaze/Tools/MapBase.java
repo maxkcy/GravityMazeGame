@@ -3,7 +3,6 @@ package com.max.GravityMaze.Tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,7 +15,6 @@ import com.dongbat.jbump.Rect;
 import com.dongbat.jbump.World;
 import com.max.GravityMaze.GameStuff.EndpointEntity;
 import com.max.GravityMaze.GravityMazeMain;
-import com.max.GravityMaze.Loading.Paths.SpritePaths;
 
 public class MapBase {
    protected GravityMazeMain game;
@@ -35,6 +33,7 @@ public class MapBase {
    float angle;
    boolean cameraTransitioned;
    //Array<Transitions> transitionsArray;
+   protected Ball ball;
 
 
    protected void init(){
@@ -73,6 +72,8 @@ public class MapBase {
                * MathUtils.radiansToDegrees;
        angle = (((angle % 360) + 360) % 360);
 
+       ball = new Ball(start.getX() + MathUtils.random(-10,10), start.getY() + MathUtils.random(-10, 10), world, shapeRenderer, cam);
+
        /*transitionsArray = new Array<>();
        transitionsArray.add(new OpeningTransition());*/
 
@@ -96,6 +97,7 @@ public class MapBase {
                shapeRenderer.rect(rect.x, rect.y, rect.w, rect.h);
            }else{Gdx.app.error(this.toString(), "item is null in wall array");}
        }
+       ball.shapeRender();
        shapeRenderer.end();
 
        viewport.apply();
@@ -122,26 +124,34 @@ public class MapBase {
            }else{Gdx.app.error(this.toString(), "item is null in endpointArray");}
        }
        game.batch.end();
-        openingTransition(delta);
-       /*for (Transitions transition: transitionsArray) {
-            if (transition instanceof OpeningTransition){
-                transition.TransitionMethod(delta, cam, viewport, start, angle);
-                if(((OpeningTransition)transition).cameraTransitioned == true && time >= 5f){
-                transitionsArray.removeValue(transition, true);
-                }
-            }
-       }*/
-   }
 
+
+
+       openingTransition(delta);
+       if(cameraTransitioned){
+           ball.update(-(float)Math.atan2(cam.up.x, cam.up.y)*MathUtils.radiansToDegrees);
+           cam.position.set(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 , world.getRect(ball.ball).y + world.getRect(ball.ball).h/2, 0);
+           if(!oTransx && !oTransy){
+               checkViewport();
+           }
+
+
+       }
+
+   }
+   private boolean oTransx = true;
+   private boolean oTransy = true;
    public void openingTransition(float delta){
        time += delta;
-       if ( time > 1.69f) {
+       if ( time > 1.69f && (oTransx || oTransy)) {
            if (viewport.getWorldWidth() > 200) {
                viewport.setWorldWidth(viewport.getWorldWidth() - 5);
-           }
+           }else{oTransx = false;}
+
            if (viewport.getWorldHeight() > 200) {
                viewport.setWorldHeight(viewport.getWorldHeight() - 5);
-           }
+           } else {oTransy = false;}
+
            if(!cameraTransitioned) {
                if ((start.getX() + start.getWidth() / 2) - cam.position.x > 6 || start.getX() - cam.position.x < -6
                        && start.getY() - cam.position.y > 6 || start.getY() - cam.position.y < -6) {
@@ -153,4 +163,38 @@ public class MapBase {
            }
        }
    }
+   public void checkViewport(){
+       if (world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 >= 0 && world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 <= 800
+               && world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 >= 0 && world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 <= 800){
+       viewport.setWorldWidth(200);
+       viewport.setWorldHeight(200);
+       }else{
+           if(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 < 0 || world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 < 0){
+           viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2);
+               viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2);
+           }else if(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 > 800 || world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 > 800){
+               viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2 - 800);
+               viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2 - 800);
+           }
+            /*
+            //bad code
+            if(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 < 0){
+           viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2)*2 );
+                viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2)*2 );
+            }else if(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 > 800){
+                viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 - 800)*2 );
+                viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 - 800)*2 );
+            }*/
+       }
+   }
 }
+
+       /* ... //this method use used in input
+       for (Transitions transition: transitionsArray) {
+            if (transition instanceof OpeningTransition){
+                transition.TransitionMethod(delta, cam, viewport, start, angle);
+                if(((OpeningTransition)transition).cameraTransitioned == true && time >= 5f){
+                transitionsArray.removeValue(transition, true);
+                }
+            }
+       }*/

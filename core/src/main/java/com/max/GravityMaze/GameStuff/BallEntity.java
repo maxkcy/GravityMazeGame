@@ -8,15 +8,13 @@ import com.max.GravityMaze.Tools.Entity;
 
 
 public class BallEntity extends Entity {
-    private float camRotation;
-    private OrthographicCamera cam;
 
     public BallEntity(float x, float y) {
         super(x, y, 16, 16);
     }
 
 
-    CollisionFilter ballCollision = new CollisionFilter() {
+    public CollisionFilter ballCollision = new CollisionFilter() {
         @Override
         public Response filter(Item item, Item other) {
             if(other.userData instanceof WallEntity){
@@ -28,13 +26,7 @@ public class BallEntity extends Entity {
         }
     };
 
-    public void setCamRotation(float camRotation) {
-        this.camRotation = camRotation;
-    }
 
-    public void update(float delta){
-
-    }
 
 
 
