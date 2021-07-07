@@ -2,11 +2,13 @@ package com.max.GravityMaze;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.max.GravityMaze.Loading.Loader;
 import com.max.GravityMaze.Screens.SplashScreen;
+import com.max.GravityMaze.Screens.WinScreen;
 import com.max.GravityMaze.Screens.lvls.lvl1;
 
 public class GravityMazeMain extends Game {
@@ -15,6 +17,7 @@ public class GravityMazeMain extends Game {
     public Loader loader;
     public SplashScreen splashScreen;
     public lvl1 lvl1;
+    public WinScreen winScreen;
 
     @Override
     public void create() {
@@ -46,6 +49,7 @@ public class GravityMazeMain extends Game {
         batch.dispose();
         assMan.dispose();
         splashScreen.dispose();
+        lvl1.dispose();
         super.dispose();
     }
 

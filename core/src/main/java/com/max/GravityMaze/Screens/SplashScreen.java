@@ -28,12 +28,12 @@ public class SplashScreen extends ScreenAdapter {
     @Override
     public void show() {
         cam = new OrthographicCamera();
-        viewport = new FitViewport(720, 420, cam);
+        viewport = new FitViewport(720, 1020, cam);
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
         splash = new Sprite(new Texture(Gdx.files.internal("sprites/splash.png")));
         loadingBarBack = new Sprite(new Texture(Gdx.files.internal("sprites/loadingbarback.png")));
         loadingBarFront = new Sprite(new Texture(Gdx.files.internal("sprites/loadingbarfront.png")));
-        splash.setBounds(0, 100,720, 320);
+        splash.setBounds(0, 100,720, 920);
         loadingBarBack.setBounds(0,0, 720, 100);
         loadingBarFront.setBounds(0,0, 720, 100);
         game.loader.loadMapPaths();
@@ -60,6 +60,7 @@ public class SplashScreen extends ScreenAdapter {
         game.loader.updateLoader();
         Gdx.app.log(this.toString(),  "" + 100 * game.assMan.getProgress());
         if (game.assMan.isFinished()){
+            game.winScreen = new WinScreen(game);
             game.lvl1 = new lvl1(game);
             Gdx.app.postRunnable(() -> game.setScreen(game.lvl1));
         }

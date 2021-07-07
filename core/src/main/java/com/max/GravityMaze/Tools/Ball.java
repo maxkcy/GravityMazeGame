@@ -10,19 +10,24 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Rect;
+import com.dongbat.jbump.Response;
 import com.dongbat.jbump.World;
 import com.max.GravityMaze.GameStuff.BallEntity;
+import com.max.GravityMaze.GameStuff.EndpointEntity;
+import com.max.GravityMaze.GameStuff.WallEntity;
 
 public class Ball{
     Vector2 position = new Vector2();
-    protected Item<Entity> ball;
+    public Item<Entity> ball;
     protected World world;
     protected ShapeRenderer shapeRenderer;
     protected Vector2 acceleration = new Vector2();
-    protected Vector2 velocity = new Vector2();
+    public Vector2 velocity = new Vector2();
     protected OrthographicCamera cam;
+    public CollisionFilter collisionFilter;
 
     public Ball(float x, float y, World world, ShapeRenderer shapeRenderer, OrthographicCamera cam) {
         position.x = x;
@@ -43,11 +48,11 @@ public class Ball{
     }
 
     public void update(float camRotation){
-        acceleration.x = MathUtils.cosDeg(camRotation - 90) * .1f;
-        acceleration.y = MathUtils.sinDeg(camRotation - 90) * .1f;
+        acceleration.x = MathUtils.cosDeg(camRotation - 90) * .01f;
+        acceleration.y = MathUtils.sinDeg(camRotation - 90) * .01f;
         velocity.x += acceleration.x;
         velocity.y += acceleration.y;
-        world.move(ball, world.getRect(ball).x  + velocity.x, world.getRect(ball).y + velocity.y, ((BallEntity)ball.userData).ballCollision);
+        world.move(ball, world.getRect(ball).x  + velocity.x, world.getRect(ball).y + velocity.y, collisionFilter);
         if (world.getRect(ball).x == ball.userData.position.x){
             velocity.x = 0f;
         }
@@ -61,12 +66,11 @@ public class Ball{
     }
     public void handleInput(){
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            cam.rotate(5f);
+            cam.rotate(1f);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            cam.rotate(-5f);
+            cam.rotate(-1f);
         }
-
-
     }
+
 }

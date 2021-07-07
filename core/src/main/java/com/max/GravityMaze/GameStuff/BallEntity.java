@@ -1,5 +1,6 @@
 package com.max.GravityMaze.GameStuff;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Item;
@@ -14,17 +15,8 @@ public class BallEntity extends Entity {
     }
 
 
-    public CollisionFilter ballCollision = new CollisionFilter() {
-        @Override
-        public Response filter(Item item, Item other) {
-            if(other.userData instanceof WallEntity){
-                return Response.slide;
-            }else if(other.userData instanceof EndpointEntity){
-                return Response.cross;
-            }
-            return null;
-        }
-    };
+
+
 
 
 

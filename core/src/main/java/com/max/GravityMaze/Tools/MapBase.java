@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Rect;
@@ -16,7 +17,7 @@ import com.dongbat.jbump.World;
 import com.max.GravityMaze.GameStuff.EndpointEntity;
 import com.max.GravityMaze.GravityMazeMain;
 
-public class MapBase {
+public class MapBase implements Disposable {
    protected GravityMazeMain game;
    protected TiledMap map;
    protected OrthogonalTiledMapRenderer mapRenderer;
@@ -134,9 +135,8 @@ public class MapBase {
            if(!oTransx && !oTransy){
                checkViewport();
            }
-
-
        }
+
 
    }
    private boolean oTransx = true;
@@ -163,30 +163,43 @@ public class MapBase {
            }
        }
    }
-   public void checkViewport(){
+
+   private void checkViewport(){
        if (world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 >= 0 && world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 <= 800
                && world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 >= 0 && world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 <= 800){
        viewport.setWorldWidth(200);
        viewport.setWorldHeight(200);
+
        }else{
-           if(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 < 0 || world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 < 0){
-           viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2);
-               viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2);
-           }else if(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2 > 800 || world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 > 800){
-               viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2 - 800);
-               viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w/2)*2 - 800);
+           if(Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2 - 400) > Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2 - 400)){
+               if (world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2 < 0 - 20) {
+                   viewport.setWorldWidth(1600 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2) * 2);
+                   viewport.setWorldHeight(1600 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2) * 2);
+
+               } else if (world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2 > 800 + 20) {
+                   viewport.setWorldWidth(1600 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2) * 2 - 800);
+                   viewport.setWorldHeight(1600 + Math.abs(world.getRect(ball.ball).x + world.getRect(ball.ball).w / 2) * 2 - 800);
+               }
+           }else {
+               if (world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2 < 0 - 20) {
+                   viewport.setWorldHeight(800 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2) * 2);
+                   viewport.setWorldWidth(800 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2) * 2);
+               } else if (world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2 > 800 + 20) {
+                   viewport.setWorldHeight(800 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2 - 800) * 2);
+                   viewport.setWorldWidth(800 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h / 2 - 800) * 2);
+               }
            }
-            /*
-            //bad code
-            if(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 < 0){
-           viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2)*2 );
-                viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2)*2 );
-            }else if(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 > 800){
-                viewport.setWorldHeight(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 - 800)*2 );
-                viewport.setWorldWidth(200 + Math.abs(world.getRect(ball.ball).y + world.getRect(ball.ball).h/2 - 800)*2 );
-            }*/
        }
    }
+
+
+    @Override
+    public void dispose() {
+        shapeRenderer.dispose();
+        mapRenderer.dispose();
+        map.dispose();
+
+    }
 }
 
        /* ... //this method use used in input

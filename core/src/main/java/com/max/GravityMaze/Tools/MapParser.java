@@ -42,8 +42,11 @@ Array<Item> endpointArray;
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 Item<Entity> item = new Item<>(new EndpointEntity(rect.x, rect.y, rect.width, rect.height));
                 ((EndpointEntity)item.userData).setEndpoint(mapObject.getProperties().get("ENDPOINT", null, String.class));
+                if(((EndpointEntity)item.userData).getEndpoint().equals("end")){
                 world.add(item, item.userData.position.x, item.userData.position.y,
-                        item.userData.width, item.userData.height);
+                        item.userData.width + 8, item.userData.height + 5);
+                }else {world.add(item, item.userData.position.x, item.userData.position.y,
+                        item.userData.width + 1, item.userData.height + 1);}
                 endpointArray.add(item);
                 Gdx.app.log(this.toString(), "endItem added to endpointArray");
             }
