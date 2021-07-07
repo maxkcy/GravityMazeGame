@@ -1,6 +1,7 @@
 package com.max.GravityMaze.Loading;
 
 
+import com.max.GravityMaze.Loading.Paths.FontPaths;
 import com.max.GravityMaze.Loading.Paths.SpritePaths;
 import com.max.GravityMaze.Loading.Paths.TiledMapPaths;
 
@@ -33,6 +34,12 @@ public class LoadingPaths {
 
     public List<String> getSkinPaths() {
         List<String> list = new ArrayList<>();
+        return list;
+    }
+
+    public List<String> getFontPaths(){
+        List<String> list = new ArrayList<>();
+        list.add(FontPaths.ENCODE_SANS_SC_PATH);
         return list;
     }
 

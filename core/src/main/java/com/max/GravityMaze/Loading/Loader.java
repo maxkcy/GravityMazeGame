@@ -3,6 +3,7 @@ package com.max.GravityMaze.Loading;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -35,6 +36,14 @@ public class Loader {
         for (String spritePath : loadingPaths.getSpritePaths()) {
             if (spritePath != null) {
                 assetManager.load(spritePath, Texture.class);
+            }
+        }
+    }
+
+    public void loadFontPaths(){
+        for(String fontPath : loadingPaths.getFontPaths()){
+            if (fontPath != null) {
+                assetManager.load(fontPath, BitmapFont.class);
             }
         }
     }

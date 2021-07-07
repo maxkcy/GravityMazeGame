@@ -18,6 +18,7 @@ import com.max.GravityMaze.GameStuff.WallEntity;
 import com.max.GravityMaze.GravityMazeMain;
 import com.max.GravityMaze.Loading.Paths.SpritePaths;
 import com.max.GravityMaze.Loading.Paths.TiledMapPaths;
+import com.max.GravityMaze.Tools.Hud;
 import com.max.GravityMaze.Tools.MapBase;
 import com.max.GravityMaze.Tools.MapParser;
 
@@ -48,18 +49,21 @@ public class lvl1 extends MapBase implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         update(delta);
         checkballspeed();
+
         if (Gdx.input.isKeyPressed(Input.Keys.R)){
             game.lvl1 = new lvl1(game);
             Gdx.app.postRunnable(()-> game.setScreen(game.lvl1));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.T)){
+        /*if (Gdx.input.isKeyPressed(Input.Keys.T)){
             world.update(ball.ball, 545, 330, 16, 16);
-        }
+        }*/
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        hud.viewport.update(width,height);
+
     }
 
     @Override

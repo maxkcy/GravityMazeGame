@@ -32,9 +32,10 @@ public class MapBase implements Disposable {
    protected MapParser mapParser;
    protected float time = 0f;
    float angle;
-   boolean cameraTransitioned;
+   boolean cameraTransitioned = false;
    //Array<Transitions> transitionsArray;
    protected Ball ball;
+   public Hud hud;
 
 
    protected void init(){
@@ -75,9 +76,9 @@ public class MapBase implements Disposable {
 
        ball = new Ball(start.getX() + MathUtils.random(-10,10), start.getY() + MathUtils.random(-10, 10), world, shapeRenderer, cam);
 
+       hud = new Hud(game);
        /*transitionsArray = new Array<>();
        transitionsArray.add(new OpeningTransition());*/
-
    }
 
    protected void update(float delta){
@@ -137,7 +138,7 @@ public class MapBase implements Disposable {
            }
        }
 
-
+        if(cameraTransitioned){hud.update(delta);}
    }
    private boolean oTransx = true;
    private boolean oTransy = true;

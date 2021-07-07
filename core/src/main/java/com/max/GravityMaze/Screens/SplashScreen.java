@@ -38,6 +38,7 @@ public class SplashScreen extends ScreenAdapter {
         loadingBarFront.setBounds(0,0, 720, 100);
         game.loader.loadMapPaths();
         game.loader.loadSpritePaths();
+        game.loader.loadFontPaths();
 
     }
 
