@@ -24,6 +24,7 @@ public class LoadingPaths {
         list.add(SpritePaths.END_PATH);
         list.add(SpritePaths.START_PATH);
         list.add(SpritePaths.FRY_WINNERGF_PATH);
+        list.add(SpritePaths.JAMES_STAR_BKGRND);
         return list;
     }
 

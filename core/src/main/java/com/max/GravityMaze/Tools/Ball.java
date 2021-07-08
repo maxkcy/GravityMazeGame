@@ -48,6 +48,7 @@ public class Ball{
     }
 
     public void update(float camRotation){
+        Gdx.app.log(this.toString(), ""+ camRotation);
         acceleration.x = MathUtils.cosDeg(camRotation - 90) * .01f;
         acceleration.y = MathUtils.sinDeg(camRotation - 90) * .01f;
         velocity.x += acceleration.x;

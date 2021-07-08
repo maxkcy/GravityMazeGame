@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Response;
@@ -24,6 +28,10 @@ import com.max.GravityMaze.Tools.MapParser;
 
 public class lvl1 extends MapBase implements Screen {
 
+    public OrthographicCamera bkgrndTestCam;
+    public Viewport bkgrndTestViewP;
+    public Texture jamesBkgrnd;
+
 
     public lvl1(GravityMazeMain game) {
         this.game = game;
@@ -34,12 +42,22 @@ public class lvl1 extends MapBase implements Screen {
         end = new Sprite((Texture) game.assMan.get(SpritePaths.END_PATH));
         end.setScale(.5f);
         //end.setOrigin(0,0);
+
     }
 
 
     @Override
     public void show() {
+        //dif cam and vp
+        bkgrndTestCam = new OrthographicCamera();
+
+
+        jamesBkgrnd = game.assMan.get(SpritePaths.JAMES_STAR_BKGRND);
+
         init();
+        bkgrndTestViewP = new FitViewport(800, 800, bkgrndTestCam);
+        bkgrndTestCam.position.set(bkgrndTestViewP.getWorldWidth()/2, bkgrndTestViewP.getWorldHeight()/2, 0);
+
     }
 
 
@@ -47,6 +65,26 @@ public class lvl1 extends MapBase implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        bkgrndTestViewP.setWorldSize(viewport.getWorldWidth(), viewport.getWorldHeight());
+        bkgrndTestViewP.apply();
+        //bkgrndTestCam.position.set(world.getRect(ball.ball).x + 8, world.getRect(ball.ball).y + 8, 0);
+
+
+        bkgrndTestCam.position.set(bkgrndTestViewP.getWorldWidth()/2, bkgrndTestViewP.getWorldHeight()/2, 0);
+        float camsrotation = -(float)Math.atan2(cam.up.x, cam.up.y)* MathUtils.radiansToDegrees;
+        //System.out.println(camsrotation);
+        float bkcamrotation = -(float)Math.atan2(bkgrndTestCam.up.x, bkgrndTestCam.up.y)* MathUtils.radiansToDegrees;
+        bkgrndTestCam.rotate(-(camsrotation - bkcamrotation));
+        bkgrndTestCam.update();
+        cam.update();
+        game.batch.setProjectionMatrix(bkgrndTestCam.combined);
+        game.batch.begin();
+        game.batch.draw(jamesBkgrnd,bkgrndTestViewP.getWorldWidth()/2 - 500 * 3,bkgrndTestViewP.getWorldHeight()/2 - 500 *3 ,  1000 * 3, 1000 * 3);
+        game.batch.end();
+
+
+
+        viewport.apply();
         update(delta);
         checkballspeed();
 
@@ -61,6 +99,7 @@ public class lvl1 extends MapBase implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        bkgrndTestViewP.update(width, height);
         viewport.update(width, height);
         hud.viewport.update(width,height);
 
